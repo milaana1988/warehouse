@@ -94,4 +94,53 @@ The API returns meaningful HTTP status codes:
 - `500 Internal Server Error`: Unexpected errors
 
 
-# warehouse
+## Testing Examples
+
+Below are end-to-end examples to verify `/assign` behavior in both modes.
+
+### Setup (run once)
+```bash
+rm -f warehouse.db
+uvicorn warehouse.main:app --reload --host 127.0.0.1 --port 8000 &
+curl -s -X POST http://127.0.0.1:8000/trucks -H "Content-Type: application/json" -d '{"length":10,"width":10,"height":10}'
+curl -s -X POST http://127.0.0.1:8000/trucks -H "Content-Type: application/json" -d '{"length":7,"width":10,"height":10}'
+curl -s -X POST http://127.0.0.1:8000/packages -H "Content-Type: application/json" -d '{"length":7,"width":10,"height":10}'
+curl -s -X POST http://127.0.0.1:8000/packages -H "Content-Type: application/json" -d '{"length":7,"width":5,"height":10}'
+curl -s -X POST http://127.0.0.1:8000/packages -H "Content-Type: application/json" -d '{"length":7,"width":5,"height":10}'
+```
+
+### Test A: Without Bin-Packing
+```bash
+curl -i -X POST http://127.0.0.1:8000/assign      -H "Content-Type: application/json"      -d '{
+           "package_ids": [1,2,3],
+           "use_bin_packing": false
+         }'
+```
+**Expected response:**
+```json
+{
+  "assigned": [1],
+  "deferred": [2, 3],
+  "message": "Assigned 1 pkg(s) to truck 1; 2 deferred."
+}
+```
+
+### Test B: With Bin-Packing
+```bash
+curl -i -X POST http://127.0.0.1:8000/assign      -H "Content-Type: application/json"      -d '{
+           "package_ids": [1,2,3],
+           "use_bin_packing": true
+         }'
+```
+**Expected response:**
+```json
+{
+  "assigned": [2, 3],
+  "deferred": [1],
+  "message": "Assigned 2 pkg(s); 1 deferred."
+}
+```
+
+
+## Google Doc For the Diaphragm
+    https://docs.google.com/document/d/1w6QXgxNtpx1XNQoggtGKywYenBgCgMTbZOu6gdSFXgo/edit?usp=sharing

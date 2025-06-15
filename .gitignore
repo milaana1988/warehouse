@@ -1,0 +1,21 @@
+# Byte‐compiled / optimized
+__pycache__/
+*.py[cod]
+*.pyo
+*$py.class
+
+# Virtual environment
+venv/
+.venv/
+
+# SQLite database
+warehouse.db
+
+# IDE/editor files
+.vscode/
+*.suo
+*.user
+*.idea/
+
+# Logs
+*.log
