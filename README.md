@@ -142,5 +142,5 @@ curl -i -X POST http://127.0.0.1:8000/assign      -H "Content-Type: application/
 ```
 
 
-## Google Doc For the Diaphragm
+## Google Doc For the Diagram
     https://docs.google.com/document/d/1w6QXgxNtpx1XNQoggtGKywYenBgCgMTbZOu6gdSFXgo/edit?usp=sharing
